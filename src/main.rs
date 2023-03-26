@@ -1,10 +1,11 @@
 use bytes::BufMut;
-use futures_util::TryStreamExt;
+use futures_util::{TryStreamExt, StreamExt};
 use mongodb::{
     bson::doc,
     options::ClientOptions,
     Client,
 };
+use mongodb_gridfs::{options::GridFSBucketOptions, GridFSBucket};
 use rand::distributions::{Alphanumeric, DistString};
 use serde::{Deserialize, Serialize};
 use warp::{multipart::Part, Filter};
@@ -12,7 +13,7 @@ use warp::{multipart::Part, Filter};
 #[derive(Serialize, Deserialize)]
 struct Post {
     id: String,
-    data: Vec<u8>,
+    bucket_id: mongodb::bson::oid::ObjectId,
     mime_type: String,
 }
 
@@ -96,9 +97,14 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                                 warp::reject::reject()
                             })?;
 
+                        let rand_string = Alphanumeric.sample_string(&mut rand::thread_rng(), 16);
+
+                        let mut bucket = GridFSBucket::new(mongodb_database.clone(), Some(GridFSBucketOptions::default()));
+                        let id = bucket.upload_from_stream(rand_string.as_str(), value.as_slice(), None).await.unwrap();
+
                         let post = Post {
-                            id: Alphanumeric.sample_string(&mut rand::thread_rng(), 16),
-                            data: value,
+                            id: rand_string,
+                            bucket_id: id,
                             mime_type,
                         };
 
@@ -140,6 +146,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 return Err(warp::reject::not_found());
             }
 
+            let document = document.unwrap();
+
+            let bucket = GridFSBucket::new(mongodb_database.clone(), Some(GridFSBucketOptions::default()));
+
+            let mut cursor = bucket.open_download_stream(document.bucket_id).await.unwrap();
+
+            let mut buffer = Vec::new();
+
+            while let Some(item) = cursor.next().await {
+                buffer.extend_from_slice(&item);
+            }
+
             let post_bson = mongodb::bson::to_bson(&document).unwrap();
 
             let post: Post = match post_bson {
@@ -149,14 +167,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 _ => panic!("Invalid BSON"),
             };
 
-            // Set the content type
-            let mut response = warp::reply::Response::new(post.data.into());
-            response.headers_mut().insert(
-                "content-type",
-                warp::http::header::HeaderValue::from_str(&post.mime_type).unwrap(),
-            );
-
-            Ok::<_, warp::Rejection>(response)
+            Ok::<_, warp::Rejection>(warp::reply::with_header(buffer, "Content-Type", post.mime_type))
         });
 
     // TODO: import react stuff, more fun with lua
