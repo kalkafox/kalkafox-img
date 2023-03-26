@@ -1,5 +1,8 @@
 [phases.setup]
-nixPkgs = ['...', 'nodejs']
+nixPkgs = ['...', 'nodejs', 'python']
 
 [phases.build]
 cmds = ['npm install --prefix frontend", "cd frontend && npx vite build --prefix frontend && cd ..', 'cargo build --release']
+
+[start]
+cmd = 'target/release/kalkafox-img'
