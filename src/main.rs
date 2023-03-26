@@ -35,6 +35,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         std::process::exit(1);
     });
 
+    let port = std::env::var("PORT").unwrap_or_else(|_| "3030".to_string()).parse::<u16>().unwrap();
+
 
     // Upload endpoint that takes multipart/form-data
     let upload_route = warp::path!("upload")
@@ -165,7 +167,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let routes = upload_route.or(download_route).or(not_found_route);
 
     println!("Listening on http://localhost:3030");
-    warp::serve(routes).run(([127, 0, 0, 1], 3030)).await;
+    warp::serve(routes).run(([0, 0, 0, 0], port)).await;
 
     Ok(())
 }
