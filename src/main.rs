@@ -172,10 +172,25 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     // TODO: import react stuff, more fun with lua
 
-    let not_found_route = warp::any()
-        .map(|| warp::reply::with_status("Not Found", warp::http::StatusCode::NOT_FOUND));
+    let asset_route = warp::path!("assets" / String)
+        .and(warp::get())
+        .and_then(|path| async move {
+            let path = format!("./frontend/dist/assets/{}", path);
+            // get the mime type from the file extension
+            let mime_type = mime_guess::from_path(&path).first_or_octet_stream();
 
-    let routes = upload_route.or(download_route).or(not_found_route);
+            // read the file into a buffer and serve it
+            let file = tokio::fs::read(path).await.unwrap();
+            Ok::<_, warp::Rejection>(warp::reply::with_header(file, "Content-Type", mime_type.to_string()))
+        });
+
+    let not_found_route = warp::any()
+        .and_then(|| async move {
+            let file = tokio::fs::read_to_string("./frontend/dist/index.html").await.unwrap();
+            Ok::<_, warp::Rejection>(warp::reply::with_header(file, "Content-Type", "text/html"))
+        });
+
+    let routes = upload_route.or(download_route).or(asset_route).or(not_found_route);
 
     println!("Listening on http://localhost:3030");
     warp::serve(routes).run(([0, 0, 0, 0], port)).await;
