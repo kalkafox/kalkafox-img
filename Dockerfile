@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache curl bash nodejs npm
+RUN apk add --no-cache curl bash nodejs npm build-base
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
