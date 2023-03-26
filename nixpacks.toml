@@ -1,0 +1,5 @@
+[phases.setup]
+nixPkgs = ['...', 'nodejs']
+
+[phases.build]
+cmds = ['npm install --prefix frontend", "npx vite build --prefix frontend']
