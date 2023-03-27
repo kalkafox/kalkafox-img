@@ -2,7 +2,7 @@
 nixPkgs = ['...', 'nodejs', 'python']
 
 [phases.build]
-cmds = ['npm install --prefix frontend", "npm --prefix frontend run build', 'cargo build --release']
+cmd = './scripts/build.sh'
 
 [start]
 cmd = 'target/release/kalkafox-img'
