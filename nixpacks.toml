@@ -5,4 +5,4 @@ nixPkgs = ['...', 'nodejs', 'python']
 cmds = ['...', 'npm --prefix frontend install', 'npm --prefix frontend run build']
 
 [staticAssets]
-paths = ['frontend/dist']
+paths = 'frontend/dist'
