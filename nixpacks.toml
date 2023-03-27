@@ -2,4 +2,4 @@
 nixPkgs = ['...', 'nodejs', 'python']
 
 [phases.build]
-cmds = ['...', 'npm --prefix frontend install', 'npm --prefix frontend run build']
+cmds = ['...', 'npm --prefix frontend install', 'npm --prefix frontend run build', 'mv frontend/dist bin/frontend']
