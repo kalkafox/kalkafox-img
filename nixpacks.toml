@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ['...', 'nodejs', 'python']
+nixPkgs = ['...', 'nodejs', 'python3']
 
 [phases.build]
 cmds = ['...', 'npm --prefix frontend install', 'npm --prefix frontend run build']
 
-[staticAssets]
-paths = 'frontend/dist'
+[start]
+onlyIncludeFiles = ['frontend/dist/**', 'bin/kalkafox-img']
