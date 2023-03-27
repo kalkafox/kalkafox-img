@@ -1,2 +1,5 @@
 [phases.setup]
 nixPkgs = ['...', 'nodejs', 'python']
+
+[phases.build]
+cmds = ['...', 'npm --prefix frontend install', 'npm --prefix frontend run build']
