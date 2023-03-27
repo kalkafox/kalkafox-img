@@ -5,4 +5,4 @@ nixPkgs = ['...', 'nodejs', 'python']
 cmd = './scripts/build.sh'
 
 [start]
-cmd = 'target/release/kalkafox-img'
+cmd = 'bin/kalkafox-img'
