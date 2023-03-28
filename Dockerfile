@@ -23,4 +23,8 @@ RUN rm -fR /build
 # Clean APK cache
 RUN rm -rf /var/cache/apk/*
 
+# Remove python, cargo and nodejs
+
+RUN apk del cargo nodejs python3
+
 CMD ["/app/kalkafox-img"]
