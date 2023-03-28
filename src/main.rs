@@ -175,7 +175,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let asset_route = warp::path!("assets" / String)
         .and(warp::get())
         .and_then(|path| async move {
-            let path = format!("./frontend/dist/assets/{}", path);
+            let web_path = std::env::var("ASSETS_PATH").unwrap_or_else(|_| "./frontend/dist".to_string());
+            let path = format!("{}/assets/{}", web_path, path);
             // get the mime type from the file extension
             let mime_type = mime_guess::from_path(&path).first_or_octet_stream();
 
@@ -186,7 +187,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let not_found_route = warp::any()
         .and_then(|| async move {
-            let file = tokio::fs::read_to_string("./frontend/dist/index.html").await.unwrap();
+            let web_path = std::env::var("ASSETS_PATH").unwrap_or_else(|_| "./frontend/dist".to_string());
+            let file = tokio::fs::read_to_string(format!("{}/index.html", web_path)).await.unwrap();
             Ok::<_, warp::Rejection>(warp::reply::with_header(file, "Content-Type", "text/html"))
         });
 
