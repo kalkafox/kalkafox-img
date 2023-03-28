@@ -16,7 +16,7 @@ WORKDIR /app
 
 RUN cp /build/target/release/kalkafox-img .
 
-RUN mv /build/frontend/dist ./frontend
+RUN mv /build/frontend/dist /frontend
 
 RUN rm -fR /build
 
