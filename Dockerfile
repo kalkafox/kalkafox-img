@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache cargo nodejs python3 npm
+RUN apk add --no-cache cargo nodejs python3 npm gcc
 
 WORKDIR /build
 
