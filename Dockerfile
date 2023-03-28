@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache cargo nodejs python3
+RUN apk add --no-cache cargo nodejs python3 npm
 
 WORKDIR /build
 
@@ -25,6 +25,6 @@ RUN rm -rf /var/cache/apk/*
 
 # Remove python, cargo and nodejs
 
-RUN apk del cargo nodejs python3
+RUN apk del cargo nodejs python3 npm
 
 CMD ["/app/kalkafox-img"]
