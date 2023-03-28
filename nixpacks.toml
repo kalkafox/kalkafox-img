@@ -5,4 +5,4 @@ nixPkgs = ['...', 'nodejs', 'python3']
 cmds = ['...', 'npm --prefix frontend install', 'npm --prefix frontend run build']
 
 [start]
-onlyIncludeFiles = ['frontend/dist/**', 'bin/kalkafox-img']
+onlyIncludeFiles = ['frontend/dist/index.html', 'bin/kalkafox-img', 'frontend/dist/*.js']
