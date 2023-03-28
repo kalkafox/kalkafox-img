@@ -46,7 +46,7 @@ function App() {
         ctx.putImageData(imageData, 0, 0)
       }
     }
-  }, [transitionCount])
+  }, [count])
 
   return (
     <>

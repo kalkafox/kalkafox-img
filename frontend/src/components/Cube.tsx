@@ -10,8 +10,6 @@ function WireframeBox(props: any) {
   useFrame(() => {
     if (mesh.current) {
       mesh.current.rotation.y += 0.01
-      // Clamp between -1 and 1 for Math.cos(mesh.current.rotation.x)
-      console.log(mesh.current.rotation.x)
       mesh.current.rotation.x = Math.cos(mesh.current.rotation.y) * 0.5
     }
   })
