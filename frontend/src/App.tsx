@@ -46,13 +46,13 @@ function App() {
         ctx.putImageData(imageData, 0, 0)
       }
     }
-  }, [count])
+  }, [transitionCount])
 
   return (
     <>
       <div
         onMouseMove={() => {
-          if (count % 20 === 0) {
+          if (count % 5 === 0) {
             setTransitionCount(transitionCount + 1)
           }
           if (count % 50 === 0) {
