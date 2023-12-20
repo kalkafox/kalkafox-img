@@ -2,7 +2,6 @@ FROM alpine
 
 WORKDIR /build
 
-COPY .cargo /root/.cargo
 COPY . .
 
 RUN apk add --no-cache nodejs python3 cargo rust npm gcc && cargo build --release && npm --prefix frontend install && npm --prefix frontend run build && mv frontend/dist /frontend && mv target/release/kalkafox-img /bin/kalkafox-img
