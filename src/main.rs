@@ -42,7 +42,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Upload endpoint that takes multipart/form-data
     let upload_route = warp::path!("upload")
         .and(warp::post())
-        .and(warp::multipart::form().max_length(12_000_000)) // max 12MB
+        .and(warp::multipart::form().max_length(200_000_000)) // max 200MB
         .and(warp::header::<String>("x-api-key"))
         .and_then(|form: warp::multipart::FormData, key: String| async move {
             let connection_env = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
